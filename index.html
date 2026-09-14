@@ -1,8 +1,111 @@
+<!DOCTYPE html>
 <html>
+<head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gimik Perasmian</title>
-  <head></head>
-  <body style="background-color:black;">
-    <iframe src="https://www.jigsawplanet.com/?rc=play&amp;pid=032c5c9d7fc4&amp;view=iframe" style="width:100%;height:100%" frameborder="0" allowfullscreen></iframe>
-  </body>
+  <style>
+    /* Reset margins so everything fits perfectly */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      overflow: hidden;
+    }
+
+    /* Iframe styling */
+    .jigsaw-frame {
+      width: 100%;
+      height: calc(100% - 20px); /* Leave 20px for the focus bar */
+      border: none;
+    }
+
+    /* Focus Area: Click this after finishing the puzzle so the keyboard shortcut works */
+    .focus-area {
+      height: 20px;
+      width: 100%;
+      background-color: #111;
+      color: #555;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 12px;
+      line-height: 20px;
+      cursor: pointer;
+    }
+    
+    .focus-area:active {
+      background-color: #333;
+    }
+
+    /* Video hidden by default */
+    #montageVideo {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background-color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Jigsaw Puzzle -->
+  <iframe 
+    class="jigsaw-frame"
+    src="https://www.jigsawplanet.com/?rc=play&amp;pid=032c5c9d7fc4&amp;view=iframe" 
+    allowfullscreen>
+  </iframe>
+
+  <!-- Focus Zone -->
+  <div class="focus-area" onclick="this.focus()" tabindex="-1" title="Click here to re-focus the window for the keyboard shortcut">
+    [ Click here after puzzle is done to enable keyboard shortcut ]
+  </div>
+
+  <!-- Montage Video (Replace 'YOUR_VIDEO_FILE.mp4' with your actual video link) -->
+  <video id="montageVideo" controls>
+    <source src="https://hsegamat2.moh.gov.my/seque/media/0-Pain Free Video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+<script>
+    const video = document.getElementById('montageVideo');
+
+    // Listen for the Keyboard Shortcut (Alt + M)
+    window.addEventListener('keydown', function(event) {
+      // Check if Alt key and 'M' or 'm' is pressed
+      if (event.altKey && (event.key === 'm' || event.key === 'M')) {
+        
+        event.preventDefault(); // <-- ADD THIS LINE to block any browser default action
+        
+        playMontage();
+      }
+    });
+
+    function playMontage() {
+      video.style.display = 'block';
+
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+      }
+
+      video.play();
+    }
+
+    video.addEventListener('ended', function() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+      video.style.display = 'none';
+    });
+  </script>
+
+</body>
 </html>

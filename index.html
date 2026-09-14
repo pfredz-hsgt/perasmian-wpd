@@ -14,6 +14,24 @@
       overflow: hidden;
     }
 
+    /* Fullscreen Start Overlay */
+    #startOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      font-size: 24px;
+      z-index: 10000; /* Stays on top of everything */
+      cursor: pointer;
+    }
+
     /* Iframe styling */
     .jigsaw-frame {
       width: 100%;
@@ -53,6 +71,11 @@
 </head>
 <body>
 
+  <!-- Start Overlay -->
+  <div id="startOverlay">
+    [ Click anywhere to start in Fullscreen Mode ]
+  </div>
+
   <!-- Jigsaw Puzzle -->
   <iframe 
     class="jigsaw-frame"
@@ -65,22 +88,39 @@
     [ Click here after puzzle is done to enable keyboard shortcut ]
   </div>
 
-  <!-- Montage Video (Replace 'YOUR_VIDEO_FILE.mp4' with your actual video link) -->
+  <!-- Montage Video -->
   <video id="montageVideo" controls>
     <source src="https://hsegamat2.moh.gov.my/qms/static/media/video-wpd.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-<script>
+  <script>
+    // --- FULLSCREEN START LOGIC ---
+    const startOverlay = document.getElementById('startOverlay');
+    
+    startOverlay.addEventListener('click', function() {
+      // 1. Request fullscreen for the whole webpage (not just the video)
+      const docElm = document.documentElement;
+      if (docElm.requestFullscreen) {
+        docElm.requestFullscreen();
+      } else if (docElm.webkitRequestFullscreen) { /* Safari */
+        docElm.webkitRequestFullscreen();
+      } else if (docElm.msRequestFullscreen) { /* IE11 */
+        docElm.msRequestFullscreen();
+      }
+      
+      // 2. Hide this overlay so the VIP can see the puzzle
+      startOverlay.style.display = 'none';
+    });
+
+
+    // --- VIDEO SHORTCUT LOGIC ---
     const video = document.getElementById('montageVideo');
 
-    // Listen for the Keyboard Shortcut (Alt + M)
+    // Listen for the Keyboard Shortcut ('v' or 'V')
     window.addEventListener('keydown', function(event) {
-      // Check if Alt key and 'M' or 'm' is pressed
       if (event.key === 'v' || event.key === 'V') {
-        
-        event.preventDefault(); // <-- ADD THIS LINE to block any browser default action
-        
+        event.preventDefault(); // Block any browser default action
         playMontage();
       }
     });
@@ -88,6 +128,7 @@
     function playMontage() {
       video.style.display = 'block';
 
+      // Push the video itself to fullscreen
       if (video.requestFullscreen) {
         video.requestFullscreen();
       } else if (video.webkitRequestFullscreen) {
@@ -100,6 +141,9 @@
     }
 
     video.addEventListener('ended', function() {
+      // Note: Exiting fullscreen here will exit the WHOLE page's fullscreen.
+      // If you just want the video to disappear and keep the puzzle fullscreen, 
+      // remove the if(document.fullscreenElement) block.
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }

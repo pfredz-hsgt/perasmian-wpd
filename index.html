@@ -67,7 +67,7 @@
 
   <!-- Montage Video (Replace 'YOUR_VIDEO_FILE.mp4' with your actual video link) -->
   <video id="montageVideo" controls>
-    <source src="https://hsegamat2.moh.gov.my/seque/media/0-Pain Free Video.mp4" type="video/mp4">
+    <source src="https://hsegamat2.moh.gov.my/qms/static/media/video-wpd.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
@@ -77,7 +77,7 @@
     // Listen for the Keyboard Shortcut (Alt + M)
     window.addEventListener('keydown', function(event) {
       // Check if Alt key and 'M' or 'm' is pressed
-      if (event.altKey && (event.key === 'm' || event.key === 'M')) {
+      if (event.key === 'v' || event.key === 'V') {
         
         event.preventDefault(); // <-- ADD THIS LINE to block any browser default action
         
